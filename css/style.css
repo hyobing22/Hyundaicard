@@ -1,0 +1,942 @@
+/* ========================================= */
+        /* [0] 전역 기본 세팅 (Reset & Base) */
+        /* ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Helvetica Neue', 'Noto Sans KR', Arial, sans-serif; 
+            background-color: #111; 
+            color: #fff; 
+            overflow-x: hidden; 
+        }
+        ul { list-style: none; }
+        a { text-decoration: none; color: inherit;}
+
+        header{
+            position: fixed;
+        }
+
+        .sec-01-main,
+        .sec-03-plate, 
+        .sec-04-culture, 
+        .sec-05-alphabet, 
+        .sec-06-premium, 
+        .sec-07-plcc,
+        footer {
+            position: relative;
+            z-index: 30; 
+            background-color: #111; 
+        }
+
+        /* --- 커스텀 커서 --- */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; 
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s; 
+            background-size: cover; 
+            background-position: center; 
+            border-radius: 50%;
+        }
+        .custom-cursor.default {
+            width: 1.04vw; 
+            height: 1.04vw; 
+            background-color: #fff; 
+            background-image: none; 
+        }
+        .custom-cursor.on-link {
+            width: 4.16vw; 
+            height: 4.16vw; 
+            background-color: transparent; 
+            background-image: url('https://picsum.photos/100/100?random=3'); 
+        }
+
+        /* 공통 헤더/푸터/더미 섹션 */
+        header, footer, .sec-01-main { 
+            padding: 2.6vw; 
+            text-align: center; 
+            border-bottom: 0.05vw solid #333; 
+        }
+        .dummy-space { 
+            height: 50vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.66vw; 
+            color: #666; 
+        }
+        .sec-01-main{
+            width: 100%;
+            height: 100vh;
+        }
+        
+
+        /* ========================================= */
+        /* [01] MAIN SECTION: Blob & Parallax Image */
+        /* ========================================= */
+        .sec-01-main {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: url(../images/main/wrapperBg.jpg)no-repeat 0 0; /* 어두운 배경에서 대비 효과가 극대화됩니다 */
+            background-size: cover;
+            background-position: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+
+            /* 배경 패럴랙스를 */
+            /* background-size: 115% 100%;
+            background-position: 0% center;
+            background-repeat: no-repeat; */
+        }
+
+        .logomark{
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            z-index: 35;
+            mix-blend-mode: difference;
+        }
+
+        /* Blob 컨테이너 (SVG Gooey 필터 + CSS 대비 필터 동시 적용) */
+        .sec-01-main .blob-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            filter: url(#goo-filter) contrast(150%);
+            pointer-events: none; /* 마우스 호버 방해 방지 */
+        }
+
+        /* 둥둥 떠다니는 원형들 */
+        .sec-01-main .blob-item {
+            position: absolute;
+            border-radius: 50%;
+            /* 요청하신 블러 효과 추가 */
+            filter: blur(10px);
+            mix-blend-mode: screen; 
+            opacity: 0.8;
+        }
+        
+        /* 각 원형의 초기 위치 및 색상 (현대카드 느낌의 컬러 추천) */
+        .sec-01-main .circle1 { width: 20vw; height: 20vw; background-color: #1a42ff; top: 15%; left: 20%; }
+        .sec-01-main .circle2 { width: 35vw; height: 35vw; background-color: #ff0055; top: 50%; left: 60%; }
+        .sec-01-main .circle3 { width: 25vw; height: 25vw; background-color: #8c00ff; top: 60%; left: 15%; }
+        /* .sec-01-main .circle4 { width: 30vw; height: 30vw; background-color: #d4d4d4; top: 30%; left: 75%; } */
+
+        /* 마우스를 따라다닐 끈적이는 커서 블롭 */
+        .sec-01-main .blob-cursor {
+            position: absolute;
+            top: 0; left: 0;
+            width: 6vw; height: 6vw;
+            background-color: #ffffff;
+            border-radius: 50%;
+            filter: blur(10px);
+            /*transform: translate(-50%, -50%);*/
+        }
+
+        /* 중앙 정사각형 이미지 프레임 */
+        .sec-01-main .main-image-frame {
+            position: relative;
+            z-index: 10; /* 원형들보다 위에 위치 */
+            width: 80vw; /* 정사각형 너비 */
+            height: 30vw; /* 정사각형 높이 */
+            overflow: hidden; /* 영역 밖 이미지 숨김 */
+            border-radius: 1vw;
+            box-shadow: 0 2vw 4vw rgba(0,0,0,0.6);
+        }
+
+        /* 가로로 긴 패럴랙스 내부 이미지 */
+        .sec-01-main .main-parallax-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150%; /* 가로 이동 공간을 위해 150%로 설정 */
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* ========================================= */
+        /* [1] 02 SECTION: 단차 없는 스크롤 + 텍스트 GSAP */
+        /* ========================================= */
+        
+        .apple-pay-logo {
+            display: inline-block;
+            width: 6vw;
+            height: 3vw;
+            margin-top: 1.5vw;
+
+            /* 🔥 [가장 중요] 텍스트 모양대로 자르는 기능을 강제로 해제합니다 */
+            -webkit-background-clip: border-box !important;
+            background-clip: border-box !important;
+            color: transparent !important;
+
+            /* 배경 그라데이션 색상 (왼쪽: 차오르는 색 / 오른쪽: 기본 색) */
+            background-image: linear-gradient(to right, #fff 50%, #444444 50%) !important;
+            background-size: 200% 100% !important;
+            background-position-x: 100%; /* 애니메이션 시작 위치 */
+
+            /* 마스크 이미지 처리 (반드시 배경이 투명한 이미지여야 함) */
+            -webkit-mask-image: url('../images/02IMG/ApplePayLogo.png'); /* 확장자명 확인! */
+            mask-image: url('../images/02IMG/ApplePayLogo.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: left center;
+            mask-position: left center;
+        }
+        .sec-02-intro { 
+            position: relative;
+            width: 100%; 
+            background-color: #111; 
+            z-index: 5; 
+        }
+        .sec-02-intro .intro-panel { 
+            position: sticky; top: 0; 
+            width: 100%; 
+            height: 90vh; 
+            display: flex; 
+            align-items: center; 
+        }
+        .sec-02-intro .bg-1 { 
+            background: url(../images/02IMG/01bg.png)no-repeat 0 0;
+            background-size: cover; 
+        }
+        .sec-02-intro .bg-2 { 
+            background: url(../images/02IMG/02bg.png)no-repeat 0 0; 
+            background-size: cover; 
+        }
+        .sec-02-intro .bg-3 { 
+            background: url(../images/02IMG/03bg.png)no-repeat 0 0; 
+            background-size: cover; 
+        }
+
+        .sec-02-intro .text-content { 
+            width: 50%; 
+            padding: 0 5.2vw;
+            box-sizing: border-box; 
+        }
+        .sec-02-intro .gsap-reveal-text, .sec-02-intro .p-text .line {
+            display: inline-block; 
+            background-image: linear-gradient(to right, #ffffff 50%, #555555 50%);
+            background-size: 200% 100%; 
+            background-position-x: 100%; 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+            font-weight: bold; 
+            margin-bottom: 0.5vw;
+        }
+        .sec-02-intro .bg-3 .gsap-reveal-text, 
+        .sec-02-intro .bg-3 .p-text .line {
+            background-image: linear-gradient(to right, #0a0a0a 50%, #cecdcd 50%);
+        }
+        .sec-02-intro h2.h2-text { 
+            font-size: 3vw; 
+            margin-bottom: 1.04vw; 
+            letter-spacing: -0.12vw; 
+            line-height: 1.1; 
+            font-weight: 800; 
+            display: block;
+        }
+        .sec-02-intro p.p-text { 
+            font-size: 1.25vw; 
+            line-height: 1.4; 
+            max-width: 43.75vw; 
+            margin-top: 2vw; 
+        }
+        .sec-02-intro .p-text .line { 
+            display: block; 
+            width: fit-content; 
+        }
+
+        .sec-02-intro .phone-fixed-container {
+            position: fixed; top: 0; right: 0; 
+            width: 50%; 
+            height: 100vh;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 10; 
+            pointer-events: none;
+        }
+        .sec-02-intro .phone-composition { 
+            position: relative; 
+            transform: scale(0.9);
+        } 
+        .sec-02-intro .screen-mask {
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            overflow: hidden; z-index: 0;
+        } 
+        .sec-02-intro .screen-item { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            opacity: 0; 
+            visibility: hidden; 
+        }
+        .sec-02-intro .phone-frame-img { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 1; 
+        }
+        .sec-02-intro .element-wrapper { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 2; 
+            overflow: visible; 
+        }
+        .sec-02-intro .element-item {
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            width: 25vw; 
+            opacity: 0; 
+            visibility: hidden;
+        }
+
+        /* ========================================= */
+        /* [2] 03 SECTION: 커서 방향 움직이는 3D 카드 */
+        /* ========================================= */
+        .sec-03-plate { 
+            width: 100vw; 
+            height: 120vh; 
+            position: relative;
+        }
+        .sec-03-plate::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(
+                to bottom,
+                #111 0%,
+                transparent 20%,
+                transparent 90%,
+                #111 100%
+            );
+        }
+        .sec-03-plate .plate-wrapper {
+            width: 100%; 
+            height: 100%; 
+            position: relative;
+            z-index: 1;
+            background: url(../images/cardIMG/plateCard/plate.bg.jpg) no-repeat 0 0;
+            background-size: cover; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-around; 
+            gap: 5vw;
+        }
+        .sec-03-plate .plate-container { 
+            padding: 10vh 5vw 10vh 15vw; 
+            perspective: 31.25vw; 
+            position: relative; 
+        }
+        .sec-03-plate .card-inner { 
+            position: relative; 
+            width: 19.11vw; 
+            height: 30.52vw; 
+            transform-style: preserve-3d; 
+        }
+        .sec-03-plate .overlay {
+            position: absolute; top: 0; left: 0; 
+            width: 19.11vw; 
+            height: 30.52vw;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.58) 24%, rgba(252, 251, 251, 0.12) 65%, transparent 82%);
+            filter: brightness(1.2) opacity(0); 
+            mix-blend-mode: overlay; 
+            background-size: 150%;
+            background-position: 100%; 
+            border-radius: 0.66vw; 
+            pointer-events: none; 
+            z-index: 2;
+        }
+        .sec-03-plate .card {
+            position: absolute; top: 0; left: 0; 
+            width: 19.11vw; 
+            height: 30.52vw;
+            background-image: url(../images/cardIMG/plateCard/metal.png); 
+            background-size: cover;
+            border-radius: 0.66vw; 
+            box-shadow: 0 2vh 4vw rgba(0,0,0,0.4);
+        }
+        .sec-03-plate .plate-right { 
+            width: 50vw; 
+            height: 60vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .sec-03-plate .plate-title h2 { 
+            font-size: 2.5vw; 
+            font-weight: 600; 
+            color: #fff; 
+            line-height: 1.3; 
+        }
+        .sec-03-plate .plate-btns { 
+            display: flex; 
+            gap: 2vw; 
+        }
+        .sec-03-plate .plate-btns div { 
+            width: 7vw; 
+            height: 7vw; 
+            cursor: none; 
+        }
+        .sec-03-plate .plate-btns div img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            border-radius: 0.41vw;
+        }
+        .platename{
+            font-size: 1vw;
+            margin-bottom: 1vw;
+            font-weight: 300;
+        }
+
+        /* ========================================= */
+        /* [3] 04 SECTION: Culture Renewal */
+        /* ========================================= */
+        .sec-04-culture {
+            background-color: #2b3ac0; 
+            width: 100vw; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 2.604vw;
+        }
+        .sec-04-culture .tgroup { 
+            padding-top: 10vh;
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 2.604vw; 
+            color: #fff; 
+        }
+        .sec-04-culture .culture-title { 
+            font-size: 2.864vw; 
+            display: inline-block; 
+        }
+        .sec-04-culture .culture-sentence { 
+            font-size: 1.25vw; 
+            width: 50vw; 
+            line-height: 5vh;
+            margin-top: 3vh;
+        }
+        
+        .sec-04-culture .culture-renewal-section { 
+            display: flex; 
+            justify-content: space-between; 
+            width: 100%; 
+            height: 50.5vw; 
+            align-items: flex-end; 
+        }
+        .sec-04-culture .visual-frame { 
+            width: 48vw; 
+            height: 30vw; 
+            position: relative; 
+            overflow: hidden; 
+            background-color: #000; 
+            margin-bottom: 1.822vw; 
+        }
+        .sec-04-culture .image-group { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.6s ease, visibility 0.6s ease; 
+        }
+        .sec-04-culture .image-group.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+        .sec-04-culture .visual-frame img { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            opacity: 0; 
+            transition: opacity 0.3s; 
+        }
+        .sec-04-culture .visual-frame img.active { opacity: 1; z-index: 1; }
+
+        .sec-04-culture .list-nav { 
+            width: 36.458vw; 
+            text-align: right; 
+        }
+        .sec-04-culture .nav-item { 
+            margin-bottom: 1.562vw; 
+            font-size: 3.125vw; 
+            font-weight: 900; 
+            font-style: italic; 
+        }
+        .sec-04-culture .nav-link { 
+            position: relative; 
+            display: inline-block; 
+            padding-bottom: 0.26vw; 
+        }
+        .sec-04-culture .text-mask { 
+            position: relative; 
+            display: block; 
+        }
+        .sec-04-culture .text-original { color: rgba(255, 255, 255, 0.4); }
+        .sec-04-culture .text-fill { 
+            position: absolute; top: 0; right: 0; 
+            color: #ffffff; 
+            white-space: nowrap; 
+            clip-path: inset(0 0 0 100%); 
+        }
+        .sec-04-culture .underline { 
+            position: absolute; bottom: 0; right: 0; 
+            width: 0%; 
+            height: 0.208vw; 
+            background-color: #ffffff; 
+        }
+
+        /* ========================================= */
+        /* [4] 05 SECTION: Alphabet Card */
+        /* ========================================= */
+        .sec-05-alphabet { 
+            position: relative; 
+            width: 100vw; 
+            height: 55vw; 
+            min-height: 31.25vw; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            overflow: hidden; 
+            background-color: #4b5e5a; 
+        }
+        .sec-05-alphabet .bg-parallax { 
+            position: absolute; top: -60%; left: -5%; 
+            width: 110%; 
+            height: 180%; 
+            background: url('../images/cardIMG/alphabet/1-bg.png') no-repeat center center; 
+            background-size: cover; 
+            opacity: 0.3; 
+            z-index: 1; 
+            transition: background-image 0.4s ease-in-out; 
+        }
+        .sec-05-alphabet .alphabet-container { 
+            position: relative; 
+            z-index: 10; 
+            width: 90vw; 
+            margin: 0 auto;
+        }
+        .sec-05-alphabet .title-area { 
+            margin-bottom: 6vw; 
+            margin-left: 1vw; 
+        }
+        .sec-05-alphabet h2 { 
+            font-size: 3.2vw; 
+            font-weight: 800; 
+            letter-spacing: 0.1vw; 
+            margin-bottom: 1.5vw; 
+        }
+        .sec-05-alphabet p {
+            font-size: 1.2vw; 
+            color: #d1d8d6; 
+            line-height: 1.5; 
+        }
+        
+        .sec-05-alphabet .card-list { 
+            display: flex; 
+            gap: 1.2vw; 
+            justify-content: space-between; 
+            width: 100%; 
+            flex-wrap: nowrap; 
+        }
+        .sec-05-alphabet .card-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 0.8vw; 
+            perspective: 52.08vw; 
+        }
+        .sec-05-alphabet .card { 
+            position: relative;
+            width: 10vw; 
+            aspect-ratio: 173 / 274; 
+            height: auto; 
+            min-width: 4.68vw; 
+            cursor: none; 
+            border-radius: 0.8vw; 
+            transform-style: preserve-3d; 
+            box-shadow: 0.3vw 0.6vw 1.2vw rgba(0,0,0,0.3); 
+        }
+        .sec-05-alphabet .card-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 0.8vw; 
+            background-color: #d9d9d9; 
+        }
+        .sec-05-alphabet .card-hover { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(15, 15, 15, 0.85); 
+            border-radius: 0.8vw; 
+            padding: 1vw; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            opacity: 0; transition: opacity 0.3s ease-in-out; border: 0.05vw solid #333; 
+        }
+        .sec-05-alphabet .card:hover .card-hover { opacity: 1; }
+        .sec-05-alphabet .card-hover p { 
+            font-size: 0.75vw; 
+            color: #ccc; 
+            line-height: 1.4; 
+            margin-bottom: 1.5vw; 
+        }
+        .sec-05-alphabet .card-hover p strong { 
+            display: block; 
+            color: #fff; 
+            font-size: 0.9vw; 
+            margin-top: 0.2vw; 
+        }
+        .alphabetLink{
+            text-align: center;
+            margin-top: 1.6vh;
+            font-size: 0.75vw; 
+            display: block;
+            border-radius: 9999px;
+            padding: 2px;
+            border: 1px solid #fff;
+        }
+        .sec-05-alphabet .card-label { 
+            font-size: 0.9vw; 
+            font-weight: bold; 
+            letter-spacing: 0.05vw; 
+        }
+        .sec-05-alphabet h2 {
+            line-height: 1em; /* 컨테이너의 줄간격을 1em으로 고정 */
+        }
+        .sec-05-alphabet h2 .char {
+            overflow: hidden; /* 영역 밖으로 밀려난 글자 완벽히 숨김 */
+            display: inline-block;
+            vertical-align: top;
+            height: 1em; /* 🔥 핵심: 틀의 높이를 정확히 딱 '한 줄' 크기로 고정 */
+        }
+        .sec-05-alphabet h2 .roll-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+        .sec-05-alphabet h2 .roll-txt {
+            display: block;
+            height: 1em; /* 원본 텍스트와 컬러 텍스트 모두 각각 한 줄 높이 차지 */
+            line-height: 1em; 
+        }
+
+        /* ========================================= */
+        /* [5] 06 SECTION: Premium Card (스와이프) */
+        /* ========================================= */
+        .sec-06-premium { 
+            position: relative; 
+            width: 100vw; 
+            height: 100vh; 
+            background-color: #0f0f0f; 
+            overflow: hidden; 
+        }
+        .sec-06-premium .parallax-bg { 
+            position: absolute; top: -15%; left: -5%; 
+            width: 110%; 
+            height: 130%; 
+            background: url(../images/cardIMG/premium/bg.png) no-repeat 0 0; 
+            background-size: cover; 
+            z-index: 1; 
+        }
+        .sec-06-premium .top-text-area { 
+            position: absolute; top: 15vh; left: 8vw; 
+            z-index: 5; 
+        }
+        .sec-06-premium .top-text-area p { 
+            font-size: 1.2vw; 
+            font-weight: bold; 
+            margin-bottom: 0.5vw; 
+        }
+        .sec-06-premium .top-text-area h2 { 
+            font-size: 4vw; 
+            font-weight: 900; 
+            font-style: italic; 
+        }
+        .sec-06-premium .bottom-text-area { 
+            position: absolute; top: 0vh; left: 0vh; 
+            width: 100%; 
+            text-align: center; 
+            z-index: 2; 
+        }
+        .sec-06-premium .bottom-text-area img { width: 90vw; opacity: 0.5;}
+        
+        .sec-06-premium .card-carousel { 
+            position: absolute; bottom: 0; left: 0; 
+            width: 100%; 
+            height: 25vw; 
+            z-index: 10; 
+        }
+        .sec-06-premium .carousel-item { 
+            position: absolute; bottom: 0; 
+            width: 12vw; 
+            aspect-ratio: 252 / 399; 
+            border-radius: 0.8vw; 
+            display: flex; 
+            justify-content: center; 
+            transform-origin: bottom center; 
+        }
+        .sec-06-premium .card-graphic { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 0.8vw; 
+            box-shadow: 0 1vw 2vw rgba(0,0,0,0.5); 
+            object-fit: cover; 
+        }
+        .sec-06-premium .card-info { 
+            position: absolute; top: -5vw; 
+            width: 200%; 
+            text-align: center;
+            opacity: 0; 
+            transition: opacity 0.4s ease; 
+            pointer-events: none; 
+        }
+        .sec-06-premium .card-info span { 
+            display: block; 
+            font-size: 1vw; 
+            color: #aaa; 
+            margin-bottom: 0.3vw; 
+        }
+        .sec-06-premium .card-info h3 { 
+            font-size: 1.8vw; 
+            font-weight: 800; 
+            color: #fff; 
+            text-shadow: 0 0.5vw 1vw rgba(0,0,0,0.8); 
+        }
+        .sec-06-premium .carousel-item.active .card-info { opacity: 1; }
+
+        /* ========================================= */
+        /* [6] 07 SECTION: PLCC 콜라보 카드 */
+        /* ========================================= */
+        .sec-07-plcc { 
+            position: relative; 
+            width: 100vw; 
+            height: 120vh; 
+            background-color: #000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 5; 
+        }
+        .sec-07-plcc .plcc-container { 
+            display: flex; 
+            width: 75vw; 
+            height: 70vh; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 4vw; 
+        }
+        .sec-07-plcc .plcc-left { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 1.5vw; 
+        }
+        .sec-07-plcc .plcc-card { 
+            width: 12vw; 
+            aspect-ratio: 252 / 399; 
+            background-color: #333; 
+            border-radius: 0.3vw; 
+            overflow: hidden; 
+            opacity: 0; 
+        }
+        .sec-07-plcc .plcc-card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        .sec-07-plcc .plcc-right { 
+            width: 30vw; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .sec-07-plcc .plcc-title { 
+            color: #fff; 
+            font-size: 2.2vw; 
+            font-weight: 900; 
+            margin-bottom: 0.8vw; 
+        }
+        .sec-07-plcc .plcc-desc { 
+            color: #fff; 
+            font-size: 0.9vw; 
+            line-height: 2; 
+        }
+        
+        .sec-07-plcc .plcc-list-wrapper { 
+            position: relative; 
+            height: 55vh; 
+            margin-top: 1.5vw; 
+            width: max-content; 
+        }
+        .sec-07-plcc .plcc-list-wrapper::before { 
+            position: absolute; top: 0; left: 0; 
+            content: ""; 
+            width: 100%; 
+            height: 4vw; 
+            background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); 
+            z-index: 10; 
+            pointer-events: none; 
+        }
+        .sec-07-plcc .plcc-list { 
+            height: 100%; 
+            overflow-y: auto; 
+            padding-top: 2vw; 
+            padding-bottom: 5vw; 
+            scrollbar-width: none; 
+        }
+        .sec-07-plcc .plcc-list::-webkit-scrollbar { display: none; }
+        .sec-07-plcc .plcc-list li { 
+            font-size: 1.8vw; 
+            font-weight: 700; 
+            color: #555; 
+            margin-bottom: 0.8vw; 
+            cursor: none; 
+            transition: color 0.4s ease; 
+            width: max-content; 
+        }
+        .sec-07-plcc .plcc-list li:hover { color: #fff; }
+
+        .sec-07-plcc .plcc-left { 
+            transition: all 0.3s ease;
+        }
+        .sec-07-plcc .plcc-left.is-3card { 
+            grid-template-columns: 1fr 1fr 1fr; 
+        }
+        .sec-07-plcc .plcc-left.is-3card .plcc-card {
+            width: 13vw; 
+        }
+        .sec-07-plcc .plcc-left.is-3card .plcc-card:nth-child(4) { 
+            display: none; 
+        }
+
+        /* ========================================= */
+        /* [8] footer */
+        /* ========================================= */
+        footer {
+            width: 100vw; /* 1400px */
+            padding: 6vh 12vw; /* 0 auto 60px */
+
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        footer a{
+            border-bottom: 1px solid #000;
+        }
+
+        /* 공통 호버 효과 */
+        footer a:hover {
+            opacity: 0.6;
+            transition: 0.3s ease;
+        }
+
+        /* 1. 상단 블랙 배너 영역 (기존 .footer1) */
+        footer .footer-banner {
+            width: 100%;
+            margin: 2.08vw 0 3.125vw; /* 40px 0 60px */
+            background-color: #000;
+            border-radius: 1.45vw; /* 28px */
+            padding: 4.16vw 2.08vw; /* 80px 40px */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        footer .footer-banner img {
+            width: 60%;
+            height: auto;
+            display: block;
+        }
+
+        /* 2. 하단 정보 영역 - 상단 (.top) */
+        footer .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12.25vw; /* 120px (기존 gap 대체) */
+            padding: 0 1vw;
+        }
+
+        /* 좌측 안내문 & SNS */
+        footer .topLeft p {
+            font-size: 2.6vw; /* 50px */
+            font-weight: 500;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            margin-bottom: 2vw; /* 24px */
+            text-align: left;
+            color: #000;
+        }
+
+        footer .snsLink {
+            display: flex;
+            gap: 0.93vw; /* 18px */
+        }
+
+        footer .snsLink a {
+            font-size: 1.1vw; /* 16px */
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: #000;
+        }
+
+        /* 우측 내비게이션 링크 */
+        footer .topRight nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1.04vw; /* 20px */
+        }
+
+        footer .topRight nav a {
+            font-size: 1.1vw; /* 16px */
+            font-weight: 500;
+            color: #000;
+            transition: opacity 0.2s;
+            color: #000;
+        }
+
+        /* 3. 하단 정보 영역 - 하단 (.bottom) */
+        footer .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 사업자/카피라이트 정보 */
+        footer .bottomLeft {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.72vw; /* 14px */
+            font-size: 0.72vw; /* 14px */
+            color: #333;
+        }
+
+        /* 우측 인증 마크 로고 */
+        footer .bottomRight {
+            display: flex;
+            align-items: center;
+            gap: 0.625vw; /* 12px */
+        }
+
+        footer .bottomRight img {
+            height: 1.97vw; /* 38px */
+            width: auto;
+            display: block;
+        }
