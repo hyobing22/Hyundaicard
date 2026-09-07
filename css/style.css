@@ -1,5 +1,5 @@
-/* ========================================= */
-        /* [0] 전역 기본 세팅 (Reset & Base) */
+        /* ========================================= */
+        /* 전역 기본 세팅 (Reset & Base) */
         /* ========================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -51,7 +51,6 @@
             background-image: url('https://picsum.photos/100/100?random=3'); 
         }
 
-        /* 공통 헤더/푸터/더미 섹션 */
         header, footer, .sec-01-main { 
             padding: 2.6vw; 
             text-align: center; 
@@ -72,13 +71,13 @@
         
 
         /* ========================================= */
-        /* [01] MAIN SECTION: Blob & Parallax Image */
+        /* MAIN SECTION: Blob & Parallax Image */
         /* ========================================= */
         .sec-01-main {
             width: 100vw;
             height: 100vh;
             position: relative;
-            background: url(../images/main/wrapperBg.jpg)no-repeat 0 0; /* 어두운 배경에서 대비 효과가 극대화됩니다 */
+            background: url(../images/main/wrapperBg.jpg)no-repeat 0 0; 
             background-size: cover;
             background-position: 50%;
             display: flex;
@@ -86,7 +85,7 @@
             justify-content: center;
             overflow: hidden;
 
-            /* 배경 패럴랙스를 */
+            /* 배경 패럴랙스 */
             /* background-size: 115% 100%;
             background-position: 0% center;
             background-repeat: no-repeat; */
@@ -106,14 +105,13 @@
             width: 100%; height: 100%;
             z-index: 1;
             filter: url(#goo-filter) contrast(150%);
-            pointer-events: none; /* 마우스 호버 방해 방지 */
+            pointer-events: none; 
         }
 
         /* 둥둥 떠다니는 원형들 */
         .sec-01-main .blob-item {
             position: absolute;
             border-radius: 50%;
-            /* 요청하신 블러 효과 추가 */
             filter: blur(10px);
             mix-blend-mode: screen; 
             opacity: 0.8;
@@ -125,7 +123,7 @@
         .sec-01-main .circle3 { width: 25vw; height: 25vw; background-color: #8c00ff; top: 60%; left: 15%; }
         /* .sec-01-main .circle4 { width: 30vw; height: 30vw; background-color: #d4d4d4; top: 30%; left: 75%; } */
 
-        /* 마우스를 따라다닐 끈적이는 커서 블롭 */
+        /* 마우스를 따라다닐 커서*/
         .sec-01-main .blob-cursor {
             position: absolute;
             top: 0; left: 0;
@@ -139,26 +137,26 @@
         /* 중앙 정사각형 이미지 프레임 */
         .sec-01-main .main-image-frame {
             position: relative;
-            z-index: 10; /* 원형들보다 위에 위치 */
-            width: 80vw; /* 정사각형 너비 */
-            height: 30vw; /* 정사각형 높이 */
+            z-index: 10; 
+            width: 80vw;
+            height: 30vw;
             overflow: hidden; /* 영역 밖 이미지 숨김 */
             border-radius: 1vw;
             box-shadow: 0 2vw 4vw rgba(0,0,0,0.6);
         }
 
-        /* 가로로 긴 패럴랙스 내부 이미지 */
+        /* 패럴랙스 내부 이미지 */
         .sec-01-main .main-parallax-img {
             position: absolute;
             top: 0;
             left: 0;
-            width: 150%; /* 가로 이동 공간을 위해 150%로 설정 */
+            width: 150%;
             height: 100%;
             object-fit: cover;
         }
         
         /* ========================================= */
-        /* [1] 02 SECTION: 단차 없는 스크롤 + 텍스트 GSAP */
+        /* 02 SECTION: 단차 없는 스크롤 + 텍스트 GSAP */
         /* ========================================= */
         
         .apple-pay-logo {
@@ -166,19 +164,13 @@
             width: 6vw;
             height: 3vw;
             margin-top: 1.5vw;
-
-            /* 🔥 [가장 중요] 텍스트 모양대로 자르는 기능을 강제로 해제합니다 */
             -webkit-background-clip: border-box !important;
             background-clip: border-box !important;
             color: transparent !important;
-
-            /* 배경 그라데이션 색상 (왼쪽: 차오르는 색 / 오른쪽: 기본 색) */
             background-image: linear-gradient(to right, #fff 50%, #444444 50%) !important;
             background-size: 200% 100% !important;
             background-position-x: 100%; /* 애니메이션 시작 위치 */
-
-            /* 마스크 이미지 처리 (반드시 배경이 투명한 이미지여야 함) */
-            -webkit-mask-image: url('../images/02IMG/ApplePayLogo.png'); /* 확장자명 확인! */
+            -webkit-mask-image: url('../images/02IMG/ApplePayLogo.png');
             mask-image: url('../images/02IMG/ApplePayLogo.png');
             -webkit-mask-size: contain;
             mask-size: contain;
@@ -301,7 +293,7 @@
         }
 
         /* ========================================= */
-        /* [2] 03 SECTION: 커서 방향 움직이는 3D 카드 */
+        /* 03 SECTION: 커서 방향 움직이는 3D 카드 */
         /* ========================================= */
         .sec-03-plate { 
             width: 100vw; 
@@ -402,7 +394,7 @@
         }
 
         /* ========================================= */
-        /* [3] 04 SECTION: Culture Renewal */
+        /* 04 SECTION: Culture Renewal */
         /* ========================================= */
         .sec-04-culture {
             background-color: #2b3ac0; 
@@ -500,7 +492,7 @@
         }
 
         /* ========================================= */
-        /* [4] 05 SECTION: Alphabet Card */
+        /* 05 SECTION: Alphabet Card */
         /* ========================================= */
         .sec-05-alphabet { 
             position: relative; 
@@ -617,13 +609,13 @@
             letter-spacing: 0.05vw; 
         }
         .sec-05-alphabet h2 {
-            line-height: 1em; /* 컨테이너의 줄간격을 1em으로 고정 */
+            line-height: 1em;
         }
         .sec-05-alphabet h2 .char {
-            overflow: hidden; /* 영역 밖으로 밀려난 글자 완벽히 숨김 */
+            overflow: hidden;
             display: inline-block;
             vertical-align: top;
-            height: 1em; /* 🔥 핵심: 틀의 높이를 정확히 딱 '한 줄' 크기로 고정 */
+            height: 1em;
         }
         .sec-05-alphabet h2 .roll-wrap {
             display: flex;
@@ -631,12 +623,12 @@
         }
         .sec-05-alphabet h2 .roll-txt {
             display: block;
-            height: 1em; /* 원본 텍스트와 컬러 텍스트 모두 각각 한 줄 높이 차지 */
+            height: 1em; /* 모두 각각 한 줄 높이 */
             line-height: 1em; 
         }
 
         /* ========================================= */
-        /* [5] 06 SECTION: Premium Card (스와이프) */
+        /* 06 SECTION: Premium Card (스와이프) */
         /* ========================================= */
         .sec-06-premium { 
             position: relative; 
@@ -825,7 +817,7 @@
         }
 
         /* ========================================= */
-        /* [8] footer */
+        /* footer */
         /* ========================================= */
         footer {
             width: 100vw; /* 1400px */
@@ -835,18 +827,14 @@
             flex-direction: column;
             background: #fff;
         }
-
         footer a{
             border-bottom: 1px solid #000;
         }
-
-        /* 공통 호버 효과 */
         footer a:hover {
             opacity: 0.6;
             transition: 0.3s ease;
         }
-
-        /* 1. 상단 블랙 배너 영역 (기존 .footer1) */
+        
         footer .footer-banner {
             width: 100%;
             margin: 2.08vw 0 3.125vw; /* 40px 0 60px */
@@ -857,23 +845,18 @@
             justify-content: center;
             align-items: center;
         }
-
         footer .footer-banner img {
             width: 60%;
             height: auto;
             display: block;
         }
-
-        /* 2. 하단 정보 영역 - 상단 (.top) */
         footer .top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 12.25vw; /* 120px (기존 gap 대체) */
+            margin-bottom: 12.25vw;
             padding: 0 1vw;
         }
-
-        /* 좌측 안내문 & SNS */
         footer .topLeft p {
             font-size: 2.6vw; /* 50px */
             font-weight: 500;
@@ -883,7 +866,6 @@
             text-align: left;
             color: #000;
         }
-
         footer .snsLink {
             display: flex;
             gap: 0.93vw; /* 18px */
@@ -895,15 +877,12 @@
             letter-spacing: 0.05em;
             color: #000;
         }
-
-        /* 우측 내비게이션 링크 */
         footer .topRight nav {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 1.04vw; /* 20px */
         }
-
         footer .topRight nav a {
             font-size: 1.1vw; /* 16px */
             font-weight: 500;
@@ -911,15 +890,11 @@
             transition: opacity 0.2s;
             color: #000;
         }
-
-        /* 3. 하단 정보 영역 - 하단 (.bottom) */
         footer .bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        /* 사업자/카피라이트 정보 */
         footer .bottomLeft {
             display: flex;
             flex-wrap: wrap;
@@ -927,14 +902,11 @@
             font-size: 0.72vw; /* 14px */
             color: #333;
         }
-
-        /* 우측 인증 마크 로고 */
         footer .bottomRight {
             display: flex;
             align-items: center;
             gap: 0.625vw; /* 12px */
         }
-
         footer .bottomRight img {
             height: 1.97vw; /* 38px */
             width: auto;

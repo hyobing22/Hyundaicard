@@ -1,10 +1,55 @@
 // ===============================================
-// [0] 공통: 플러그인 등록 및 전역 세팅
+// 플러그인 등록 및 전역 세팅
 // ===============================================
 {
     gsap.registerPlugin(ScrollTrigger);
 
-// 1. Lenis 부드러운 스크롤 초기화 (전역 단일 실행)
+    //깜빡임 및 렌더링 지연 완벽 방지)
+    document.addEventListener("DOMContentLoaded", () => {
+        const imagesToPreload = [];
+
+        // 1. [Section 03 Plate] 플레이트 교체 이미지
+        const plateImages = [
+            'images/cardIMG/plateCard/metal.png',
+            'images/cardIMG/plateCard/copper.png',
+            'images/cardIMG/plateCard/clear.png',
+            'images/cardIMG/plateCard/art.png'
+        ];
+        imagesToPreload.push(...plateImages);
+
+        // 2. [Section 05 Alphabet] 알파벳 카드 회전 및 배경 이미지 동적 수집
+        const alphaCards = document.querySelectorAll('.sec-05-alphabet .card');
+        alphaCards.forEach(card => {
+            const cardNum = card.getAttribute('data-card-num');
+            if(cardNum) {
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-1.png`);
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-2.png`);
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-3.png`);
+                // 호버 시 바뀌는 배경 이미지
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-bg.png`);
+            }
+        });
+
+        // 3. [Section 07 PLCC] 리스트 호버 시 교체되는 카드 이미지 동적 수집
+        const plccItems = document.querySelectorAll('.sec-07-plcc .plcc-list li');
+        plccItems.forEach(li => {
+            const brandName = li.getAttribute('data-name');
+            if(brandName) {
+                // 브랜드별 1~4번 카드 이미지
+                for(let i = 1; i <= 4; i++) {
+                    imagesToPreload.push(`images/cardIMG/PLCC/${brandName}_${i}.png`);
+                }
+            }
+        });
+
+        // 이미지를 브라우저 백그라운드에서 강제 로드
+        imagesToPreload.forEach(url => {
+            const img = new Image();
+            img.src = url;
+        });
+    });
+
+//Lenis 스크롤
 const lenis = new Lenis({
 duration: 1.2,
 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -13,7 +58,7 @@ lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((time) => { lenis.raf(time * 1000); });
 gsap.ticker.lagSmoothing(0, 0);
 
-// 2. 전역 커스텀 커서 세팅 (모든 <a> 태그 및 인터랙션 요소 호버 시 디자인 변경)
+//커스텀 커서 (<a> 태그 및 인터랙션 요소 호버 시 디자인 변경)
 const cursor = document.querySelector(".custom-cursor");
 const xTo = gsap.quickTo(cursor, "x", {duration: 0.2, ease: "power3.out"});
 const yTo = gsap.quickTo(cursor, "y", {duration: 0.2, ease: "power3.out"});
@@ -33,62 +78,60 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
 }
 
 // ===============================================
-// [0.5] Section 01 Main 로직 (끈적이는 Blob 및 가로 패럴랙스)
+// Section 01 Main (Blob 및 가로 패럴랙스)
 // ===============================================
 {
 
     gsap.to(".sec-01-main", {
-            backgroundPosition: "40% center", // 0%에서 100% 위치로 부드럽게 이동
+            backgroundPosition: "40% center", // 0%에서 100% 위치로
             ease: "none",
             scrollTrigger: {
                 trigger: ".sec-01-main",
                 start: "top top",
                 end: "bottom top",
-                scrub: true // 스크롤에 맞춰 동기화
+                scrub: true
             }
         });
         
     document.addEventListener("DOMContentLoaded", () => {
         
-        // 1. 커서와 달라붙는 Blob 커서 처리 (GSAP quickTo로 부드럽게)
+        // 커서와 달라붙는 Blob
         const blobCursor = document.querySelector(".sec-01-main .blob-cursor");
         if(blobCursor) {
             const blobX = gsap.quickTo(blobCursor, "left", { duration: 0.6, ease: "power3.out" });
             const blobY = gsap.quickTo(blobCursor, "top", { duration: 0.6, ease: "power3.out" });
-            
-            // 기존 윈도우 마우스무브 이벤트에 연결
+
             window.addEventListener("mousemove", (e) => {
                 blobX(e.clientX);
                 blobY(e.clientY);
             });
         }
 
-        // 2. 둥둥 떠다니는 원형 무작위 애니메이션 (JavaScript 제어)
+        // 원형 무작위 애니메이션
         const blobs = document.querySelectorAll(".sec-01-main .blob-item");
-        
+
         function animateBlob(blob) {
-            // GSAP 유틸리티를 사용해 무작위 x, y 위치와 시간 생성
             gsap.to(blob, {
                 x: () => `${gsap.utils.random(-15, 15)}vw`,
                 y: () => `${gsap.utils.random(-15, 15)}vw`,
                 duration: () => gsap.utils.random(4, 7),
                 ease: "sine.inOut",
-                onComplete: () => animateBlob(blob) // 완료되면 다시 무작위 이동 반복
+                onComplete: () => animateBlob(blob)
             });
         }
         
         blobs.forEach(blob => animateBlob(blob));
 
-        // 3. 중앙 정사각형 내부 이미지 가로 패럴랙스 (왼쪽에서 오른쪽으로)
+        // 내부 이미지 가로 패럴랙스
         gsap.to(".sec-01-main .main-parallax-img", {
             // width 150% 기준, 남는 50%만큼 x축 이동 (xPercent: -33.33은 이미지 너비 기준 계산식)
             xPercent: -33.333, 
             ease: "none",
             scrollTrigger: {
                 trigger: ".sec-01-main",
-                start: "top top",     // 메인 섹션이 화면 상단에 있을 때 시작
-                end: "bottom top",    // 메인 섹션이 화면 위로 다 넘어갈 때 끝
-                scrub: true           // 스크롤과 완벽 동기화
+                start: "top top",
+                end: "bottom top",
+                scrub: true
             }
         });
         
@@ -97,7 +140,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
 
 
 // ===============================================
-// [1] Section 02 Intro 로직 (동기화 스크롤 및 GSAP 텍스트)
+// Section 02 Intro (동기화 스크롤 및 GSAP 텍스트)
 // ===============================================
 {
  document.addEventListener("DOMContentLoaded", () => {
@@ -109,14 +152,10 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
     gsap.set(".sec-02-intro .screen-item-1", { autoAlpha: 1 });
     gsap.set(".sec-02-intro .element-item-1", { autoAlpha: 1 });
 
-    // 🔥 [수정 1] 폰트 로딩이 완전히 끝난 후 텍스트를 쪼개서 자리 이탈(레이아웃 꼬임) 완벽 방지
+    // 폰트 로딩이 완전히 끝난 후 이동
     document.fonts.ready.then(() => {
         const splitIntro = new SplitType('.sec-02-intro .p-text', { types: 'lines' });
         
-        // 🔥 [수정 2] 기존의 window resize 이벤트 삭제
-        // 화면을 줄일 때 텍스트를 다시 쪼개면 GSAP 요소가 증발해버리므로 삭제하는 것이 안전합니다.
-        // 이미 vw 단위를 쓰기 때문에 리사이즈를 안 해도 반응형으로 잘 줄어듭니다.
-
         const panels = document.querySelectorAll('.sec-02-intro .intro-panel');
         panels.forEach((panel, index) => {
             
@@ -134,17 +173,14 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
                     ease: "power2.inOut", 
                     stagger: 0.1, 
                     scrollTrigger: { 
-                        trigger: panel, 
-                        // 🔥 [수정 3] 애니메이션 시작 시점 늦춤!
-                        // 기존 "top 70%" -> 패널 꼭대기가 화면 70% 지점에 올 때 시작 (빠름)
-                        // 변경 "top 45%" -> 패널 꼭대기가 화면 45% 지점에 올 때 시작 (더 스크롤해야 시작됨)
+                        trigger: panel,
                         start: "top 45%", 
                         toggleActions: "play none none reverse" 
                     }
                 }
             );
 
-            // 이미지 & 요소 페이드 인/아웃 트리거 (이미지는 화면 중앙쯤 왔을 때 자연스럽게 바뀌도록 유지)
+            // 이미지 & 요소 페이드 인/아웃 트리거 (이미지가 화면 중앙쯤 왔을 때 자연스럽게 바뀌도록 유지)
             ScrollTrigger.create({
                 trigger: panel,
                 start: "top center",
@@ -153,7 +189,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
                 onEnterBack: () => fadeToCurrentPhone(index + 1)
             });
 
-            // 패럴랙스(Parallax) 효과 
+            // 패럴랙스
             const targetElement = document.querySelector(`.sec-02-intro .element-item-${index + 1}`);
             if(targetElement) {
                 gsap.fromTo(targetElement, 
@@ -184,10 +220,10 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
 }
 
 // ===============================================
-// [2] Section 03 Plate 로직 (3D 카드 회전 및 이미지 변경 + 패럴랙스 배경)
+// Section 03 Plate (카드 회전 및 이미지 변경, 패럴랙스 배경)
 // ===============================================
 {
-    // 배경 가로 패럴랙스 효과 (유지)
+    // 배경 가로 패럴랙스
     gsap.to(".sec-03-plate .plate-wrapper", {
         backgroundPosition: "100% 0", 
         ease: "none", 
@@ -205,7 +241,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
     const plateCard = document.querySelector('.sec-03-plate .card');
 
     if(plateSection) {
-        // 기존의 CSS transition 개입을 완전히 차단 (GSAP이 전담하도록 설정)
+        // CSS transition 개입 차단 (GSAP이 전담하도록 설정)
         plateCardInner.style.transition = 'none';
         plateOverlay.style.transition = 'none';
 
@@ -226,8 +262,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
             // 빛 반사 효과 중심점 실시간 추적
             plateOverlay.style.backgroundImage = `radial-gradient(circle at ${percentX}% ${percentY}%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.58) 24%, rgba(255, 166, 0, 0.12) 65%, transparent 82%)`;
             
-            // ★ GSAP을 활용한 부드러운 틸트(Tilt) 적용
-            // 마우스가 들어오는 순간 0 위치에서 계산된 각도까지 0.5초간 부드럽게 이동시킵니다.
+            // 틸트 적용 : 마우스가 들어오는 순간 0.5초간 부드럽게 이동시킵니다.
             gsap.to(plateCardInner, {
                 rotationX: rotateX,
                 rotationY: rotateY,
@@ -245,11 +280,11 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
         }); 
 
         plateSection.addEventListener('mouseleave', function() {
-            // 마우스가 나갈 때도 GSAP으로 원상복구
+            // 마우스가 나갈 때 원상복구
             gsap.to(plateCardInner, {
                 rotationX: 0,
                 rotationY: 0,
-                duration: 0.7, // 나갈 때는 조금 더 여유롭게 복구되도록 시간 늘림
+                duration: 0.7,
                 ease: "power2.out",
                 overwrite: "auto"
             });
@@ -263,7 +298,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
         });
     }
 
-    // 2-1. 플레이트 버튼 클릭 시 이미지 교체 (유지)
+    // 플레이트 버튼 클릭 시 이미지 교체
     const plateBtns = document.querySelectorAll('.sec-03-plate .plate-btns div');
     const plateImagePaths = [
         'images/cardIMG/plateCard/metal.png',
@@ -279,7 +314,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
     });
 }
 // ===============================================
-// [3] Section 04 Culture 로직 (텍스트 애니메이션 및 jQuery 메뉴 롤링)
+// Section 04 Culture (텍스트 애니메이션, jQuery 메뉴 롤링)
 // ===============================================
 {
     $(document).ready(function() {
@@ -336,22 +371,20 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
 
 
 // ===============================================
-// [4] Section 05 Alphabet 로직 (롤링 타이틀, 등장 애니메이션 및 카드 제어)
+// Section 05 Alphabet (롤링 타이틀, 등장 애니메이션 및 카드 제어)
 // ===============================================
 {
-    // 1. 등장 애니메이션 (타이틀, 설명, 카드 리스트)
+    // 등장 애니메이션
     document.fonts.ready.then(() => {
-        // [타이틀] 롤링 텍스트 애니메이션 설정
+        // 타이틀
         const titleEl = document.querySelector('.sec-05-alphabet h2');
         const splitAlphabet = new SplitType(titleEl, { types: 'chars' });
 
-        // 첨부해주신 이미지의 8가지 알파벳 컬러 배열 (빨, 노, 파, 늘, 핑, 주, 다, 베)
         const cardColors = ['#d11235', '#fce100', '#0a369d', '#13a5e5', '#f6cce0', '#ff6600', '#f15a22', '#f6e4ce'];
 
-        // 각 글자(char) 내부에 원본 글자와 색상이 들어간 글자를 위아래로 배치
         splitAlphabet.chars.forEach((char, index) => {
             const text = char.innerText;
-            const color = cardColors[index % cardColors.length]; // 색상 반복 배정
+            const color = cardColors[index % cardColors.length];
 
             char.innerHTML = `
                 <div class="roll-wrap">
@@ -363,49 +396,47 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
 
         // [타이틀] 스크롤 시 위로 굴러가는 애니메이션 (딱 한 번만)
         gsap.to(".sec-05-alphabet h2 .roll-wrap", {
-            yPercent: -50, // 50%만큼 위로 밀어올려 아래에 숨겨둔 컬러 텍스트 노출
+            yPercent: -50, // 50%만큼 위로 밀어올려 애니메이션 실행
             duration: 0.8,
-            stagger: 0.05, // 왼쪽부터 순차적으로 다다닥 돌아감
+            stagger: 0.05, // 왼쪽부터 순차적으로 실행
             ease: "back.out(1.5)",
             scrollTrigger: {
                 trigger: ".sec-05-alphabet",
                 start: "top 70%",
-                once: true // 한 번만 실행
+                //once: true 한 번만 실행
             }
         });
     });
 
-    // [설명 p태그] 아래에서 위로 등장 (딱 한 번만)
+    // 설명 p태그
     gsap.from(".sec-05-alphabet .title-area p", {
         y: "2vw",
         opacity: 0,
         duration: 0.8,
-        delay: 0.3, // 타이틀이 돌기 시작할 즈음 등장
+        delay: 0.3, // 조정
         ease: "power3.out",
         scrollTrigger: {
             trigger: ".sec-05-alphabet",
             start: "top 70%",
-            once: true
+            //once: true
         }
     });
 
-    // [카드 리스트] 아래에서 위로 하나씩 등장 (딱 한 번만)
+    // 카드 리스트
     gsap.from(".sec-05-alphabet .card-item", {
         y: "6vw",
         opacity: 0,
         duration: 0.8,
-        stagger: 0.1, // 0.1초 간격으로 순서대로 올라옴
-        ease: "back.out(1.2)", // 끝부분에서 살짝 튕기는 텐션 부여
+        stagger: 0.1, // 차례대로 올리옴
+        ease: "back.out(1.2)", // 튕기기
         scrollTrigger: {
             trigger: ".sec-05-alphabet",
-            start: "top 50%", // 카드가 화면 중간쯤 왔을 때 시작
-            once: true
+            start: "top 50%",
+            //once: true
         }
     });
 
-    // ----------------------------------------------------
-    // 기존 로직: 배경 패럴랙스 및 카드 호버/클릭 이벤트 유지
-    // ----------------------------------------------------
+    //배경 패럴랙스, 카드 호버, 클릭 이벤트
     const bgParallax = document.querySelector('.sec-05-alphabet .bg-parallax');
     const alphaCards = document.querySelectorAll('.sec-05-alphabet .card');
 
@@ -446,7 +477,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
 
 
 // ===============================================
-// [5] Section 06 Premium 로직 (패럴랙스 & 곡선형 카드 스와이프)
+// Section 06 Premium (패럴랙스, 곡선형 카드 스와이프)
 // ===============================================
 {
 
@@ -463,7 +494,7 @@ gsap.fromTo('.sec-06-premium .bottom-text-area',
     { y: '55vh', ease: 'none', scrollTrigger: { trigger: '.sec-06-premium', start: 'top bottom', end: 'center center', scrub: true } }
 );
 
-// 동적 카드 생성 배열
+// 카드 생성 배열
 const cardData = [
     { id: 1, name: 'the Orange', desc: '일상의 밀도를 높이는 혜택', background: 'images/cardIMG/premium/theOrange_1.png' },
     { id: 2, name: 'the Red', desc: '쇼핑도 여행도 언제나 핫하게', background: 'images/cardIMG/premium/theRed_1.png' },
@@ -533,7 +564,7 @@ if(carousel) {
 
 
 // ===============================================
-// [6] Section 07 PLCC 로직 (리스트 호버 시 이미지와 컬러 변경 + 3장 레이아웃 처리)
+// Section 07 PLCC (리스트 호버 시 이미지와 컬러 변경, 3card 처리)
 // ===============================================
 {
     gsap.from(".sec-07-plcc .plcc-title, .sec-07-plcc .plcc-desc", {
@@ -558,20 +589,20 @@ if(carousel) {
     plccListItems.forEach((li) => {
         li.addEventListener('mouseenter', function() {
             const brandName = this.getAttribute('data-name');
-            const is3Card = this.classList.contains('3card'); // 호버한 li가 3card 클래스를 가졌는지 판별
+            const is3Card = this.classList.contains('3card'); //3card
 
             plccHoverTimeout = setTimeout(() => {
                 plccListItems.forEach(item => item.style.color = '#555');
                 this.style.color = getRandomColor();
                 
-                // 1. 레이아웃 클래스 토글 (CSS 연동)
+                // 레이아웃 클래스 토글 (CSS)
                 if(is3Card) {
                     plccLeft.classList.add('is-3card');
                 } else {
                     plccLeft.classList.remove('is-3card');
                 }
 
-                // 2. 이미지 소스 교체 (3장일 때는 4번째 이미지를 찾지 않도록 에러 방지)
+                // 이미지 교체 (3장일 때는 4번째 이미지를 찾지 않음)
                 const activeCardsCount = is3Card ? 3 : 4;
                 for(let i = 0; i < 4; i++) {
                     if(i < activeCardsCount) {
@@ -579,11 +610,11 @@ if(carousel) {
                     }
                 }
                 
-                // 3. GSAP 애니메이션 실행 타겟 설정 (3장이면 3번째 카드까지만 애니메이션)
+                // GSAP 타겟 설정 (3장이면 3번째 카드까지만 애니메이션)
                 const targetCards = is3Card ? Array.from(plccCards).slice(0, 3) : plccCards;
 
-                // 기존 애니메이션 초기화 후 새로 실행
-                gsap.killTweensOf(plccCards); // 진행 중인 애니메이션 겹침 방지
+                // 기존 애니메이션 초기화
+                gsap.killTweensOf(plccCards); // 애니메이션 겹침 방지
                 gsap.fromTo(targetCards, 
                     { x: '-30vw', opacity: 0 }, 
                     { x: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "back.out(0.8)", overwrite: "auto" }
@@ -595,33 +626,30 @@ if(carousel) {
 }
 
 // ===============================================
-// [7] Footer 로직 (배너 애니메이션 및 텍스트 마스킹)
+// Footer (배너 애니메이션, 텍스트 마스킹)
 // ===============================================
 {
     document.addEventListener("DOMContentLoaded", () => {
-        // 1. Footer 배너 이미지 애니메이션 (위에서 아래로 살짝 내려오며 부드럽게 나타남)
         gsap.from(".footer-banner img", {
             scrollTrigger: {
                 trigger: ".footer-banner",
-                start: "top 90%", // 화면 하단에 배너가 보이기 시작할 때 실행
+                start: "top 90%",
                 toggleActions: "play none none reverse"
             },
-            y: -30,         // 살짝 작아진 상태에서
-            opacity: 0,     // 투명하게 시작
+            y: -30,
+            opacity: 0,
             duration: 2,
             ease: "ease-in"
         });
 
-        // 2. 폰트 로딩 완료 후 텍스트 개별 쪼개기 및 애니메이션 적용 (레이아웃 꼬임 방지)
         document.fonts.ready.then(() => {
             const animTargets = [];
 
-            // 2-1. p 태그 (문장) - SplitType으로 줄(line) 단위로 쪼개기
             const footerText = document.querySelector('footer .top p');
             if (footerText) {
                 const split = new SplitType(footerText, { types: 'lines' });
                 split.lines.forEach(line => {
-                    // GSAP 마스킹을 위한 overflow: hidden 래퍼 생성
+
                     const wrapper = document.createElement('div');
                     wrapper.style.overflow = 'hidden';
                     wrapper.style.display = 'block'; 
@@ -633,10 +661,10 @@ if(carousel) {
                 });
             }
 
-            // 2-2. a 태그 (SNS 링크 및 Nav 메뉴) - 각각 개별적으로 감싸기
+
             const footerLinks = document.querySelectorAll('footer .top a');
             footerLinks.forEach(link => {
-                // 기존 CSS 레이아웃(간격 등)을 유지하기 위해 <a> 태그 내부 텍스트만 래핑
+
                 const textContent = link.innerHTML;
                 link.innerHTML = '';
                 
@@ -655,16 +683,16 @@ if(carousel) {
                 animTargets.push(innerText);
             });
 
-            // 3. 수집된 모든 타겟(문장 두 줄 + 개별 링크들)을 개별 순차 애니메이션 처리
+
             gsap.from(animTargets, {
                 scrollTrigger: {
                     trigger: "footer .top",
                     start: "top 85%", 
                     toggleActions: "play none none reverse"
                 },
-                yPercent: -100, // 마스크 위쪽 보이지 않는 곳에서 시작
+                yPercent: -100, // 마스크 위쪽에서 시작
                 duration: 0.8,
-                stagger: 0.05,  // 0.05초 간격으로 왼쪽부터 오른쪽으로 하나씩 타다닥 내려옴
+                stagger: 0.05,  // 0.05초 간격으로 왼쪽부터 오른쪽으로 하나씩
                 ease: "power3.out"
             });
         });

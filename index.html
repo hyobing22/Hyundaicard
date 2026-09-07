@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
     <script src="https://unpkg.com/split-type"></script>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <div class="custom-cursor default"></div>
@@ -27,7 +27,7 @@
                 <img src="images/main/HyundaiCard_Logomark.svg" alt="HyundaiCard Logo">
             </h2>
         </div>
-        <!-- 끈적이는(Gooey) 효과를 위한 SVG 필터 -->
+        <!-- SVG 필터 -->
         <svg width="0" height="0" style="display: block; position: absolute;">
             <filter id="goo-filter">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="25" result="blur"/>
@@ -37,18 +37,16 @@
 
         <!-- 떠다니는 원형 및 커서 블롭 컨테이너 -->
         <div class="blob-container">
-            <!-- 둥둥 떠다니는 원형들 -->
             <div class="blob-item circle1"></div>
             <div class="blob-item circle2"></div>
             <div class="blob-item circle3"></div>
             
-            <!-- 마우스를 따라다닐 액체 덩어리 -->
+            <!-- 마우스를 따라다닐 blob -->
             <div class="blob-cursor"></div>
         </div>
 
-        <!-- 중앙 정사각형 이미지 (가로 패럴랙스 적용 영역) -->
+        <!--가로 패럴랙스 -->
         <div class="main-image-frame">
-            <!-- 내부 이미지는 프레임보다 가로로 더 깁니다 -->
             <img src="images/main/mainBg.jpg" alt="메인 배경" class="main-parallax-img">
         </div>
     </section>
@@ -73,7 +71,6 @@
             </div>
         </div>
 
-        <!-- 텍스트 영역 (작성자님의 원본 HTML 그대로 유지) -->
         <div class="intro-panel bg-1">
             <div class="text-content">
                 <h2 class="h2-text gsap-reveal-text">언제, 어디서든<br></h2>
@@ -380,7 +377,7 @@
                         <li data-name="무신사">무신사</li>
                         <li data-name="올리브영">올리브영</li>
                         <li data-name="넥슨">넥슨</li>
-                        <li data-name="gs칼텍스">gs칼텍스</li>
+                        <li data-name="GS칼텍스">GS칼텍스</li>
                         <li data-name="스타벅스">스타벅스</li>
                         <li data-name="네이버" class="3card">네이버</li>
                         <li data-name="지마켓" class="3card">지마켓</li>
