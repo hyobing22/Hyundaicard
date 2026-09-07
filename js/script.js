@@ -4,11 +4,11 @@
 {
     gsap.registerPlugin(ScrollTrigger);
 
-    //깜빡임 및 렌더링 지연 완벽 방지)
+    //깜빡임 및 렌더링 지연 방지
     document.addEventListener("DOMContentLoaded", () => {
         const imagesToPreload = [];
 
-        // 1. [Section 03 Plate] 플레이트 교체 이미지
+        // [Section 03 Plate] 플레이트 교체 이미지
         const plateImages = [
             'images/cardIMG/plateCard/metal.png',
             'images/cardIMG/plateCard/copper.png',
@@ -17,7 +17,7 @@
         ];
         imagesToPreload.push(...plateImages);
 
-        // 2. [Section 05 Alphabet] 알파벳 카드 회전 및 배경 이미지 동적 수집
+        // [Section 05 Alphabet] 알파벳 카드 회전 및 배경 이미지 동적 수집
         const alphaCards = document.querySelectorAll('.sec-05-alphabet .card');
         alphaCards.forEach(card => {
             const cardNum = card.getAttribute('data-card-num');
@@ -30,7 +30,7 @@
             }
         });
 
-        // 3. [Section 07 PLCC] 리스트 호버 시 교체되는 카드 이미지 동적 수집
+        // [Section 07 PLCC] 리스트 호버 시 교체되는 카드 이미지 동적 수집
         const plccItems = document.querySelectorAll('.sec-07-plcc .plcc-list li');
         plccItems.forEach(li => {
             const brandName = li.getAttribute('data-name');
