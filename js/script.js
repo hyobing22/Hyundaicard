@@ -266,10 +266,10 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
     // 2-1. 플레이트 버튼 클릭 시 이미지 교체 (유지)
     const plateBtns = document.querySelectorAll('.sec-03-plate .plate-btns div');
     const plateImagePaths = [
-        '../images/cardIMG/plateCard/metal.png',
-        '../images/cardIMG/plateCard/copper.png',
-        '../images/cardIMG/plateCard/clear.png',
-        '../images/cardIMG/plateCard/art.png'
+        'images/cardIMG/plateCard/metal.png',
+        'images/cardIMG/plateCard/copper.png',
+        'images/cardIMG/plateCard/clear.png',
+        'images/cardIMG/plateCard/art.png'
     ];
     plateBtns.forEach((button, index) => {
         button.addEventListener('click', () => {
@@ -412,7 +412,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
     alphaCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             const cardNum = this.getAttribute('data-card-num');
-            bgParallax.style.backgroundImage = `url('../images/cardIMG/alphabet/${cardNum}-bg.png')`;
+            bgParallax.style.backgroundImage = `url('images/cardIMG/alphabet/${cardNum}-bg.png')`;
         });
     });
 
@@ -436,7 +436,7 @@ el.addEventListener("mouseleave", () => cursor.className = "custom-cursor defaul
               .call(() => {
                   imgIndex = imgIndex >= 3 ? 1 : imgIndex + 1;
                   this.setAttribute('data-img-index', imgIndex);
-                  imgElement.src = `../images/cardIMG/alphabet/${cardNum}-${imgIndex}.png`;
+                  imgElement.src = `images/cardIMG/alphabet/${cardNum}-${imgIndex}.png`;
                   gsap.set(this, { rotationY: '-=180' });
               })
               .to(this, { rotationY: '+=90', duration: 0.25, ease: 'power1.out' });
@@ -465,15 +465,15 @@ gsap.fromTo('.sec-06-premium .bottom-text-area',
 
 // 동적 카드 생성 배열
 const cardData = [
-    { id: 1, name: 'the Orange', desc: '일상의 밀도를 높이는 혜택', background: '../images/cardIMG/premium/theOrange_1.png' },
-    { id: 2, name: 'the Red', desc: '쇼핑도 여행도 언제나 핫하게', background: '../images/cardIMG/premium/theRed_1.png' },
-    { id: 3, name: 'the Green Edition3', desc: '나를 위한 첫 번째 프리미엄', background: '../images/cardIMG/premium/theGreenEdition3_1.png' },
-    { id: 4, name: 'Summit', desc: '정상에 선 당신의 카드', background: '../images/cardIMG/premium/Summit_1.png' },
-    { id: 5, name: 'the Black', desc: '명성 그 이상의 가치', background: '../images/cardIMG/premium/theBlack_1.png' },
-    { id: 6, name: 'the Purple', desc: '하이엔드 라이프스타일', background: '../images/cardIMG/premium/thePurple_1.png' },
-    { id: 7, name: 'MX Black', desc: '적립과 할인의 완벽한 조합', background: '../images/cardIMG/premium/MXBlackEdition2_1.png' },
-    { id: 8, name: 'the Pink', desc: '가장 감각적인 쇼핑 메이트', background: '../images/cardIMG/premium/thePinkEdition2_1.png' },
-    { id: 9, name: 'the Red Stripe', desc: '끝없이 쌓이는 특권', background: '../images/cardIMG/premium/theRedStripeEdition2_1.png' },
+    { id: 1, name: 'the Orange', desc: '일상의 밀도를 높이는 혜택', background: 'images/cardIMG/premium/theOrange_1.png' },
+    { id: 2, name: 'the Red', desc: '쇼핑도 여행도 언제나 핫하게', background: 'images/cardIMG/premium/theRed_1.png' },
+    { id: 3, name: 'the Green Edition3', desc: '나를 위한 첫 번째 프리미엄', background: 'images/cardIMG/premium/theGreenEdition3_1.png' },
+    { id: 4, name: 'Summit', desc: '정상에 선 당신의 카드', background: 'images/cardIMG/premium/Summit_1.png' },
+    { id: 5, name: 'the Black', desc: '명성 그 이상의 가치', background: 'images/cardIMG/premium/theBlack_1.png' },
+    { id: 6, name: 'the Purple', desc: '하이엔드 라이프스타일', background: 'images/cardIMG/premium/thePurple_1.png' },
+    { id: 7, name: 'MX Black', desc: '적립과 할인의 완벽한 조합', background: 'images/cardIMG/premium/MXBlackEdition2_1.png' },
+    { id: 8, name: 'the Pink', desc: '가장 감각적인 쇼핑 메이트', background: 'images/cardIMG/premium/thePinkEdition2_1.png' },
+    { id: 9, name: 'the Red Stripe', desc: '끝없이 쌓이는 특권', background: 'images/cardIMG/premium/theRedStripeEdition2_1.png' },
 ];
 
 const carousel = document.querySelector('.sec-06-premium .card-carousel');
@@ -575,7 +575,7 @@ if(carousel) {
                 const activeCardsCount = is3Card ? 3 : 4;
                 for(let i = 0; i < 4; i++) {
                     if(i < activeCardsCount) {
-                        plccCardImgs[i].src = `../images/cardIMG/PLCC/${brandName}_${i + 1}.png`;
+                        plccCardImgs[i].src = `images/cardIMG/PLCC/${brandName}_${i + 1}.png`;
                     }
                 }
                 
@@ -594,3 +594,79 @@ if(carousel) {
     });
 }
 
+// ===============================================
+// [7] Footer 로직 (배너 애니메이션 및 텍스트 마스킹)
+// ===============================================
+{
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Footer 배너 이미지 애니메이션 (위에서 아래로 살짝 내려오며 부드럽게 나타남)
+        gsap.from(".footer-banner img", {
+            scrollTrigger: {
+                trigger: ".footer-banner",
+                start: "top 90%", // 화면 하단에 배너가 보이기 시작할 때 실행
+                toggleActions: "play none none reverse"
+            },
+            y: -30,         // 살짝 작아진 상태에서
+            opacity: 0,     // 투명하게 시작
+            duration: 2,
+            ease: "ease-in"
+        });
+
+        // 2. 폰트 로딩 완료 후 텍스트 개별 쪼개기 및 애니메이션 적용 (레이아웃 꼬임 방지)
+        document.fonts.ready.then(() => {
+            const animTargets = [];
+
+            // 2-1. p 태그 (문장) - SplitType으로 줄(line) 단위로 쪼개기
+            const footerText = document.querySelector('footer .top p');
+            if (footerText) {
+                const split = new SplitType(footerText, { types: 'lines' });
+                split.lines.forEach(line => {
+                    // GSAP 마스킹을 위한 overflow: hidden 래퍼 생성
+                    const wrapper = document.createElement('div');
+                    wrapper.style.overflow = 'hidden';
+                    wrapper.style.display = 'block'; 
+                    
+                    line.parentNode.insertBefore(wrapper, line);
+                    wrapper.appendChild(line);
+                    
+                    animTargets.push(line);
+                });
+            }
+
+            // 2-2. a 태그 (SNS 링크 및 Nav 메뉴) - 각각 개별적으로 감싸기
+            const footerLinks = document.querySelectorAll('footer .top a');
+            footerLinks.forEach(link => {
+                // 기존 CSS 레이아웃(간격 등)을 유지하기 위해 <a> 태그 내부 텍스트만 래핑
+                const textContent = link.innerHTML;
+                link.innerHTML = '';
+                
+                const wrapper = document.createElement('span');
+                wrapper.style.overflow = 'hidden';
+                wrapper.style.display = 'inline-block';
+                wrapper.style.verticalAlign = 'top';
+                
+                const innerText = document.createElement('span');
+                innerText.style.display = 'inline-block';
+                innerText.innerHTML = textContent;
+                
+                wrapper.appendChild(innerText);
+                link.appendChild(wrapper);
+                
+                animTargets.push(innerText);
+            });
+
+            // 3. 수집된 모든 타겟(문장 두 줄 + 개별 링크들)을 개별 순차 애니메이션 처리
+            gsap.from(animTargets, {
+                scrollTrigger: {
+                    trigger: "footer .top",
+                    start: "top 85%", 
+                    toggleActions: "play none none reverse"
+                },
+                yPercent: -100, // 마스크 위쪽 보이지 않는 곳에서 시작
+                duration: 0.8,
+                stagger: 0.05,  // 0.05초 간격으로 왼쪽부터 오른쪽으로 하나씩 타다닥 내려옴
+                ease: "power3.out"
+            });
+        });
+    });
+}
