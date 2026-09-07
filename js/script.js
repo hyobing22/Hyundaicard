@@ -4,6 +4,52 @@
 {
     gsap.registerPlugin(ScrollTrigger);
 
+    // ★ 전역 이미지 프리로드 로직 추가 (깜빡임 및 렌더링 지연 완벽 방지)
+    document.addEventListener("DOMContentLoaded", () => {
+        const imagesToPreload = [];
+
+        // 1. [Section 03 Plate] 플레이트 교체 이미지
+        const plateImages = [
+            'images/cardIMG/plateCard/metal.png',
+            'images/cardIMG/plateCard/copper.png',
+            'images/cardIMG/plateCard/clear.png',
+            'images/cardIMG/plateCard/art.png'
+        ];
+        imagesToPreload.push(...plateImages);
+
+        // 2. [Section 05 Alphabet] 알파벳 카드 회전 및 배경 이미지 동적 수집
+        const alphaCards = document.querySelectorAll('.sec-05-alphabet .card');
+        alphaCards.forEach(card => {
+            const cardNum = card.getAttribute('data-card-num');
+            if(cardNum) {
+                // 회전 시 교체되는 1~3번 이미지
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-1.png`);
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-2.png`);
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-3.png`);
+                // 호버 시 바뀌는 배경 이미지
+                imagesToPreload.push(`images/cardIMG/alphabet/${cardNum}-bg.png`);
+            }
+        });
+
+        // 3. [Section 07 PLCC] 리스트 호버 시 교체되는 카드 이미지 동적 수집
+        const plccItems = document.querySelectorAll('.sec-07-plcc .plcc-list li');
+        plccItems.forEach(li => {
+            const brandName = li.getAttribute('data-name');
+            if(brandName) {
+                // 각 브랜드별 1~4번 카드 이미지
+                for(let i = 1; i <= 4; i++) {
+                    imagesToPreload.push(`images/cardIMG/PLCC/${brandName}_${i}.png`);
+                }
+            }
+        });
+
+        // 수집된 모든 이미지를 브라우저 백그라운드에서 강제 로드
+        imagesToPreload.forEach(url => {
+            const img = new Image();
+            img.src = url;
+        });
+    });
+
 // 1. Lenis 부드러운 스크롤 초기화 (전역 단일 실행)
 const lenis = new Lenis({
 duration: 1.2,
